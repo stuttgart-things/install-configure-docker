@@ -1,0 +1,10 @@
+---
+- name: Install docker
+  ansible.builtin.shell: |
+    zypper in -f -y docker-19.03.15_ce-6.46.1
+    systemctl start docker
+    systemctl enable docker
+    gpasswd -a "${USER}" docker
+
+- name: Reboot server 
+  ansible.builtin.reboot:

@@ -1,0 +1,40 @@
+---
+- name: Create folder for service
+  ansible.builtin.file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+  when: set_proxy|bool
+
+- name: Generate http-proxy.conf
+  ansible.builtin.template:
+    src: http-proxy.conf.j2
+    dest: /etc/systemd/system/docker.service.d/http-proxy.conf
+  notify: restart docker
+  when: set_proxy|bool
+
+- name: Configure daemon.json
+  ansible.builtin.template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: 0600
+    owner: root
+    group: root
+  notify: restart docker
+  when: add_registry_mirrors|bool
+
+- name: Install python package
+  include_role:
+    name: install-requirements 
+  vars:
+    update_packages: false
+    python_modules: "{{ docker_python_modules }}"
+  when: login_into_private_registry|bool
+
+- name: Log into a private registry
+  community.docker.docker_login:
+    registry_url: "{{ private_registry_url }}" 
+    username: "{{ private_registry_user }}"    
+    password: "{{ private_registry_password }}"
+    reauthorize: yes
+  when: login_into_private_registry|bool
+

@@ -1,0 +1,27 @@
+---
+- name: Update os packages
+  ansible.builtin.include_role:
+    name: install-requirements 
+  vars:
+    update_packages: true
+
+- name: Setup for {{ ansible_os_family }}
+  ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yaml"
+
+- name: Install Docker for RedHat and Debian based systems
+  ansible.builtin.include_tasks: install-docker.yaml
+  when: ansible_os_family != "Suse"
+
+- name: Ensure handlers are notified now to avoid firewall conflicts.
+  ansible.builtin.meta: flush_handlers
+
+- name: Install docker-compose
+  ansible.builtin.include_tasks: docker-compose.yaml
+  when: docker_install_compose|bool
+
+- name: Create docker user
+  ansible.builtin.include_tasks: docker-users.yaml
+  when: docker_users|length > 0
+
+- name: Enable additional options
+  ansible.builtin.include_tasks: enable-options.yaml
