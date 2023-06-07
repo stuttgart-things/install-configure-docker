@@ -35,6 +35,8 @@ Example Playbook 1: Basic Docker installation + compose
 -------------------
 ```
 - hosts: "{{ target_host }}"
+  become: true
+  
   vars:
     docker_install_compose: true
 
