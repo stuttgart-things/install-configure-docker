@@ -93,4 +93,4 @@ BSD
 
 Author Information
 ------------------
-This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - stolen and adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.
+This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.
