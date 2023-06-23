@@ -21,9 +21,9 @@ roles:
 
 collections:
 - name: community.general
-  version: 2.0.1
+  version: 7.0.1
 - name: community.docker
-  version: 1.2.2
+  version: 3.4.8
 EOF
 
 ansible-galaxy install -r /tmp/requirements.yaml --force
