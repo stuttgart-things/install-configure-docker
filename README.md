@@ -14,9 +14,9 @@ copy the and paste on your ansible host to install the required roles/collection
 cat <<EOF > /tmp/requirements.yaml
 ---
 roles:
-- src: git@codehub.sva.de:Lab/stuttgart-things/supporting-roles/install-configure-docker.git
+- src: https://github.com/stuttgart-things/install-configure-docker.git
   scm: git
-- src: git@codehub.sva.de:Lab/stuttgart-things/supporting-roles/install-requirements.git
+- src: git@codehub.sva.de:Lab/stuttgart-things/install-requirements.git
   scm: git
 collections:
 - name: community.general
