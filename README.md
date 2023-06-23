@@ -16,8 +16,9 @@ cat <<EOF > /tmp/requirements.yaml
 roles:
 - src: https://github.com/stuttgart-things/install-configure-docker.git
   scm: git
-- src: git@codehub.sva.de:Lab/stuttgart-things/install-requirements.git
+- src: https://github.com/stuttgart-things/install-requirements.git
   scm: git
+
 collections:
 - name: community.general
   version: 2.0.1
