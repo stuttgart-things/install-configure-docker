@@ -44,22 +44,22 @@ kind_url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_ve
 kind_cluster_name: kind1
 kubectl_version: 1.27.3
 
-kind_binary:
-  kind:
-    bin_name: "kind"
-    bin_version: "{{ kind_version }}"
-    source_url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-amd64"
-    bin_to_copy: kind-linux-amd64
-    bin_dir: /usr/bin/
-    to_remove: kind-linux-amd64
-    check_bin_version_before_installing: true
-
-kubectl_binary:
-  kubectl:
-    bin_name: kubectl
-    bin_version: "{{ kubectl_version }}"
-    source_url: "https://dl.k8s.io/v{{ kubectl_version }}/kubernetes-client-linux-amd64.tar.gz"
-    bin_to_copy: "kubernetes/client/bin/kubectl"
-    bin_dir: /usr/bin/
-    to_remove: kubernetes
-    check_bin_version_before_installing: true
+kind_bins:
+  kind_binary:
+    kind:
+      bin_name: "kind"
+      bin_version: "{{ kind_version }}"
+      source_url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-amd64"
+      bin_to_copy: kind-linux-amd64
+      bin_dir: /usr/bin/
+      to_remove: kind-linux-amd64
+      check_bin_version_before_installing: true
+  kubectl_binary:
+    kubectl:
+      bin_name: kubectl
+      bin_version: "{{ kubectl_version }}"
+      source_url: "https://dl.k8s.io/v{{ kubectl_version }}/kubernetes-client-linux-amd64.tar.gz"
+      bin_to_copy: "kubernetes/client/bin/kubectl"
+      bin_dir: /usr/bin/
+      to_remove: kubernetes
+      check_bin_version_before_installing: true

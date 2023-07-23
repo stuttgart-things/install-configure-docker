@@ -1,13 +1,8 @@
 ---
-- name: Download and install kind
+- name: Download and install kind+kubectl
   ansible.builtin.include_role:
     name: download-install-binary
-  loop: "{{ lookup('dict', kind_binary, wantlist=True) }}"
-
-- name: Download and install kubectl
-  ansible.builtin.include_role:
-    name: download-install-binary
-  loop: "{{ lookup('dict', kubectl_binary, wantlist=True) }}"
+  loop: "{{ lookup('dict', kind_bins, wantlist=True) }}"
 
 - name: Generate kind config
   ansible.builtin.template:
