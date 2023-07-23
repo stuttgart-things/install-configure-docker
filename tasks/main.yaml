@@ -1,7 +1,7 @@
 ---
 - name: Update os packages
   ansible.builtin.include_role:
-    name: install-requirements 
+    name: install-requirements
   vars:
     update_packages: true
 
@@ -16,7 +16,7 @@
   ansible.builtin.meta: flush_handlers
 
 - name: Install docker-compose
-  ansible.builtin.include_tasks: docker-compose.yaml
+  ansible.builtin.include_tasks: compose.yaml
   when: docker_install_compose|bool
 
 - name: Create docker user
@@ -25,3 +25,7 @@
 
 - name: Enable additional options
   ansible.builtin.include_tasks: enable-options.yaml
+
+- name: Install kind
+  ansible.builtin.include_tasks: kind.yaml
+  when: install_kind|bool

@@ -1,0 +1,20 @@
+---
+- name: Download and install kind
+  ansible.builtin.include_role:
+    name: download-install-binary
+  loop: "{{ lookup('dict', kind_binary, wantlist=True) }}"
+
+- name: Download and install kubectl
+  ansible.builtin.include_role:
+    name: download-install-binary
+  loop: "{{ lookup('dict', kubectl_binary, wantlist=True) }}"
+
+- name: Generate kind config
+  ansible.builtin.template:
+    src: kind.yaml.j2
+    dest: "{{ kind_cluster_name }}.yaml"
+
+- name: Create kind cluster
+  ansible.builtin.shell: |
+    kind create cluster --config {{ kind_cluster_name }}.yaml
+    kind get clusters
