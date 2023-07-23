@@ -7,5 +7,5 @@ nodes:
 - role: worker
 - role: worker
 networking:
-  apiServerAddress: "127.0.0.1"
-  apiServerPort: 6443
+  apiServerAddress: "{{ kind_server }}"
+  apiServerPort: {{ kind_api_port }}
