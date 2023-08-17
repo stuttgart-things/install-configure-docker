@@ -1,6 +1,7 @@
 ---
 docker_edition: 'ce'
-docker_package: "docker-{{ docker_edition }}"
+docker_version: '5:23.0.6-1~ubuntu.23.04~lunar'
+docker_package: "docker-{{ docker_edition }}={{ docker_version }}"
 docker_package_state: present
 
 set_proxy: false
