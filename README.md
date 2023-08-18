@@ -40,6 +40,7 @@ Example Playbook 1: Basic Docker installation + compose
   
   vars:
     docker_install_compose: true
+    docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
 
   roles:
     - install-configure-docker
@@ -53,6 +54,7 @@ Example Playbook 2: Docker Installation + registry login and mirror
 
   vars:
     docker_install_compose: true 
+    docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
 
     add_registry_mirrors: true
     registry_mirrors:
