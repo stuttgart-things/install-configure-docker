@@ -23,7 +23,7 @@
       Package: docker-ce*
       Pin: version {{ docker_ce_version }}
       Pin-Priority: 600
-  when: docker_ce_version is defined
+  when: docker_ce_version is defined and ansible_os_family == 'Debian'
 
 - name: Ensure Docker is started and enabled at boot.
   ansible.builtin.service:
