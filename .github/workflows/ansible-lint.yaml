@@ -11,12 +11,15 @@ jobs:
     runs-on: ghr-install-configure-docker-sthings-cicd
     container:
       image: eu.gcr.io/stuttgart-things/sthings-ansible:9.3.0
-      options: --user root #65532
+      options: --user 1001 #65532
     environment: k8s
     continue-on-error: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
+        with:
+          path: ''
+
       - run: |
           ansible-lint tests/kind.yaml
 
