@@ -10,8 +10,8 @@ jobs:
   Lint-Ansible:
     runs-on: ghr-install-configure-docker-sthings-cicd
     container:
-      image: eu.gcr.io/stuttgart-things/sthings-ansible:9.2.0
-      options: --user root #65532
+      image: eu.gcr.io/stuttgart-things/sthings-ansible:9.3.0
+      options: --user=root #65532
     environment: k8s
     continue-on-error: false
     steps:
