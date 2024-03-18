@@ -7,34 +7,13 @@ on:
       - '*'
 
 jobs:
-  Lint-Ansible:
-    runs-on: ghr-install-configure-docker-sthings-cicd
-    container:
-      image: eu.gcr.io/stuttgart-things/sthings-ansible:9.3.0-1
-      #image: eu.gcr.io/stuttgart-things/sthings-ansible:9.3.0
-      #options: --user=root #65532
-    environment: k8s
-    continue-on-error: false
-    steps:
-      - run: |
-          whoami
-    
-      - name: Checkout code
-        uses: actions/checkout@v4.1.1
-        with:
-          path: ''
-
-      - run: |
-          ansible-lint tests/kind.yaml
-
-          
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: hugo-public
-#          path: public
-
-      - name: Fix permissions
-        run: |
-          chmod -c -R +rX "blog/" | while read line; do
-            echo "::warning title=Invalid file permissions automatically fixed::$line"
-          done
+  yaml-lint:
+    name: Lint yaml files
+    uses: stuttgart-things/stuttgart-things/.github/workflows/lint-yaml.yaml@main
+    with:
+      environment-name: k8s
+      runs-on: ghr-install-configure-docker-sthings-cicd
+      continue-error: true
+      yamllint-version: 1
+      lintprofile-path: .yamllint
+      artifact-name: yaml-lint
