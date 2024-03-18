@@ -34,3 +34,4 @@ jobs:
       continue-error: true
       ansible-image: eu.gcr.io/stuttgart-things/sthings-ansible:9.3.0-1
       playbook: tests/kind.yaml
+    needs: yaml-lint
