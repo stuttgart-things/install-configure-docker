@@ -1,4 +1,4 @@
 ---
-profile: basic # min, basic, moderate,safety, shared, production
+profile: min #basic , basic, moderate,safety, shared, production
 warn_list:
   - role-name
