@@ -27,7 +27,7 @@ jobs:
 
   ansible-lint:
     name: Lint ansible code
-    uses: stuttgart-things/stuttgart-things/.github/workflows/lint/lint-ansible.yaml@main
+    uses: stuttgart-things/stuttgart-things/.github/workflows/lint-ansible.yaml@ansible-lint-24.2.1
     with:
       runs-on: ghr-install-configure-docker-sthings-cicd
       environment-name: k8s
