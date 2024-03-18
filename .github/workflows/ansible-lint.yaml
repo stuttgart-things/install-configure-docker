@@ -10,7 +10,7 @@ jobs:
   Lint-Ansible:
     runs-on: ghr-install-configure-docker-sthings-cicd
     container:
-      image: eu.gcr.io/stuttgart-things/machineshop:v1.7.2
+      image: eu.gcr.io/stuttgart-things/sthings-ansible:9.3.0-1
       #image: eu.gcr.io/stuttgart-things/sthings-ansible:9.3.0
       #options: --user=root #65532
     environment: k8s
