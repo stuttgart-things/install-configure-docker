@@ -24,7 +24,7 @@
 
 - name: Install python package
   include_role:
-    name: install-requirements 
+    name: install-requirements
   vars:
     update_packages: false
     python_modules: "{{ docker_python_modules }}"
@@ -32,9 +32,8 @@
 
 - name: Log into a private registry
   community.docker.docker_login:
-    registry_url: "{{ private_registry_url }}" 
-    username: "{{ private_registry_user }}"    
+    registry_url: "{{ private_registry_url }}"
+    username: "{{ private_registry_user }}"
     password: "{{ private_registry_password }}"
-    reauthorize: yes
+    reauthorize: true
   when: login_into_private_registry|bool
-
