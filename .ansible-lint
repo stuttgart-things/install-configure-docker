@@ -11,3 +11,5 @@ skip_list:
   - key-order[task] # Rule for checking your Task order to: name, when, block
   - meta-incorrect # Rule for checking if meta config doesn't have default values
   - no-log-password # Rule for not logging outputs because of passwords
+  - yaml[comments] # Rule for comment format spaces
+  - yaml[comments-indentation] # Rule for comment indentation
