@@ -6,5 +6,5 @@
     systemctl enable docker
     gpasswd -a "${USER}" docker
 
-- name: Reboot server 
+- name: Reboot server
   ansible.builtin.reboot:
