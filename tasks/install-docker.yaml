@@ -11,7 +11,7 @@
   ansible.builtin.apt:
     name: "{{ specific_docker_package | default(docker_package) }}"
     state: "{{ docker_package_state }}"
-    force: yes
+    force: true
   ignore_errors: true
   notify: restart docker
   when: ansible_os_family == 'Debian'
@@ -47,7 +47,7 @@
 
 - name: Reload systemd daemon
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true
   when: mount_flags_updated is changed
 
 - name: Allow dockerroot group to access Docker daemon
