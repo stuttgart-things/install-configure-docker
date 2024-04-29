@@ -117,6 +117,9 @@ cat <<EOF > install-configure-docker.yaml
     install_kind: true
     kind_version: 0.22.0
     kubectl_version: 1.30.0
+
+  roles:
+    - install-configure-docker
 EOF
 ```
 
