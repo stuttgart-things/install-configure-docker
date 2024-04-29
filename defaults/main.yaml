@@ -48,7 +48,7 @@ kubectl_version: 1.27.3
 kind_api_port: 6443
 kind_server: 127.0.0.1
 
-kind_bins:
+bin:
   kubectl:
     bin_name: kubectl
     bin_version: "{{ kubectl_version }}"
