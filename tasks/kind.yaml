@@ -4,6 +4,12 @@
     name: download-install-binary
   loop: "{{ lookup('dict', bin, wantlist=True) }}"
 
+- name: Rename kind binary
+  ansible.builtin.copy:
+    src: "/usr/bin/kind-linux-amd64"
+    dest: "/usr/bin/kind"
+    remote_src: true
+
 - name: Generate kind config
   ansible.builtin.template:
     src: kind.yaml.j2
