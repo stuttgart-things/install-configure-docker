@@ -4,7 +4,7 @@
     name: "{{ specific_docker_package | default(docker_package) }}"
     state: "{{ docker_package_state }}"
   ignore_errors: true
-  notify: restart docker
+  notify: Restart docker
   when: ansible_os_family != 'Debian'
 
 - name: Install Docker
@@ -13,7 +13,7 @@
     state: "{{ docker_package_state }}"
     force: true
   ignore_errors: true
-  notify: restart docker
+  notify: Restart docker
   when: ansible_os_family == 'Debian'
 
 - name: Pin Docker-ce release
