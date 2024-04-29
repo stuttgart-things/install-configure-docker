@@ -114,31 +114,9 @@ cat <<EOF > install-configure-docker.yaml
     docker_install_compose: true 
     docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
 
-    install_kind: false
-    kind_version: 0.20.0
-    kind_url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-amd64"
-    kind_cluster_name: kind1
-    kubectl_version: 1.27.3
-    kind_api_port: 6443
-    kind_server: 127.0.0.1
-
-    bin:
-      kubectl:
-        bin_name: kubectl
-        bin_version: "{{ kubectl_version }}"
-        source_url: "https://dl.k8s.io/v{{ kubectl_version }}/kubernetes-client-linux-amd64.tar.gz"
-        bin_to_copy: "kubernetes/client/bin/kubectl"
-        bin_dir: /usr/bin/
-        to_remove: kubernetes
-        check_bin_version_before_installing: true
-      kind:
-        bin_name: "kind"
-        bin_version: "{{ kind_version }}"
-        source_url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-amd64"
-        bin_to_copy: kind-linux-amd64
-        bin_dir: /usr/bin/
-        to_remove: kind-linux-amd64
-        check_bin_version_before_installing: true
+    install_kind: true
+    kind_version: 0.22.0
+    kubectl_version: 1.30.0
 EOF
 ```
 
