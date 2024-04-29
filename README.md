@@ -68,7 +68,7 @@ cat <<EOF > install-configure-docker.yaml
 EOF
 ```
 
-</defaults>
+</details>
 
 <details><summary><b>EXAMPLE PLAYBOOK - DOCKER INSTALLATION + REGISTRY LOGIN AND MIRROR</b></summary>
 
@@ -100,7 +100,7 @@ cat <<EOF > install-configure-docker.yaml
 EOF
 ```
 
-</defaults>
+</details>
 
 <details><summary><b>EXAMPLE PLAYBOOK - DOCKER INSTALLATION + KIND AND KUBECTL</b></summary>
 
@@ -142,9 +142,9 @@ cat <<EOF > install-configure-docker.yaml
 EOF
 ```
 
-</defaults>
+</details>
 
-<details><summary>EXAMPLE EXECUTION</summary>
+<details><summary><b>EXAMPLE EXECUTION</b></summary>
 
 ```bash
 ansible-playbook -i inventory install-configure-docker.yaml -vv
