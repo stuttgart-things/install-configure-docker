@@ -40,11 +40,11 @@ reboot_centos8: true
 docker_users: [sthings]
 
 # kind
-install_kind: false
-kind_version: 0.20.0
+install_kind: true
+kind_version: 0.22.0
 kind_url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-amd64"
 kind_cluster_name: kind1
-kubectl_version: 1.27.3
+kubectl_version: 1.30.0
 kind_api_port: 6443
 kind_server: 127.0.0.1
 
