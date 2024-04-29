@@ -3,7 +3,7 @@ stuttgart-things/install-configure-docker
 
 deployment and configuration of docker (compose).
 
-<details><summary><b>VARIABLES</b></summary>
+<details><summary>VARIABLES</summary>
 
 * `set_proxy` - Set on true to generate http-proxy.conf (default:false)
 * `add_registry_mirrors` - Set on true to Configure daemon.json (default:false)
@@ -13,7 +13,7 @@ deployment and configuration of docker (compose).
 
 </details>
 
-<details><summary><b>ROLE INSTALLATION</b></summary>
+<details><summary>ROLE INSTALLATION</summary>
 
 installs role and all of it's dependencies w/:
 
@@ -51,7 +51,7 @@ EOF
 
 </details>
 
-<details><summary><b>EXAMPLE PLAYBOOK - BASIC DOCKER AND DOCKER COMPOSE INSTALLATION</b></summary>
+<details><summary>EXAMPLE PLAYBOOK - BASIC DOCKER AND DOCKER COMPOSE INSTALLATION</summary>
 
 ```yaml
 cat <<EOF > install-configure-docker.yaml
@@ -70,7 +70,7 @@ EOF
 
 </details>
 
-<details><summary><b>EXAMPLE PLAYBOOK - DOCKER INSTALLATION + REGISTRY LOGIN AND MIRROR</b></summary>
+<details><summary>EXAMPLE PLAYBOOK - DOCKER INSTALLATION + REGISTRY LOGIN AND MIRROR</summary>
 
 ```yaml
 cat <<EOF > install-configure-docker.yaml
@@ -102,7 +102,7 @@ EOF
 
 </details>
 
-<details><summary><b>EXAMPLE PLAYBOOK - DOCKER INSTALLATION + KIND AND KUBECTL</b></summary>
+<details><summary>EXAMPLE PLAYBOOK - DOCKER INSTALLATION + KIND AND KUBECTL</summary>
 
 ```yaml
 cat <<EOF > install-configure-docker.yaml
@@ -144,7 +144,7 @@ EOF
 
 </details>
 
-<details><summary><b>EXAMPLE EXECUTION</b></summary>
+<details><summary>EXAMPLE EXECUTION</summary>
 
 ```bash
 ansible-playbook -i inventory install-configure-docker.yaml -vv
