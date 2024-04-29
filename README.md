@@ -174,7 +174,7 @@ Role history
 ----------------
 | date  | who | changelog |
 |---|---|---|
-|2021-24-02   | Andre Ebert | Ansible- and Yamllint added collection release workflow
+|2023-29-04   | Andre Ebert | Added Ansible- and Yamllint with skip rules and collection release workflow
 |2021-24-02   | Patrick Hermann | Added support for registry mirrors and login to private registry
 |2020-10-10   | Patrick Hermann | Updated for using of ansible collections, fixed role structure, added to be stable version
 |2020-04-01  | Patrick Hermann | intial commit for this role in codehub
@@ -187,5 +187,6 @@ Andre Ebert (andre.ebert@sva.de); 04/2023
 
 Patrick Hermann (patrick.hermann@sva.de); 04/2020
 
-This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.
+
+(This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.)
 ```
