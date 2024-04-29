@@ -4,3 +4,12 @@ profile: basic #basic min basic moderate,safety, shared, production
   #- role-name
 skip_list:
   - role-name
+  - name[prefix] # Rule for checking task and subtask names (not the same)
+  - name[play] # Rule for checking if all plays have names (not test.yml)
+  - name[template] # Rule that only allows Jinja2 at the end of task names
+  - yaml[line-length] # Rule for checking if the line is longer than 110 characters
+  - key-order[task] # Rule for checking your Task order to: name, when, block
+  - meta-incorrect # Rule for checking if meta config doesn't have default values
+  - no-log-password # Rule for not logging outputs because of passwords
+  - yaml[comments] # Rule for comment format spaces
+  - yaml[comments-indentation] # Rule for comment indentation

@@ -8,4 +8,5 @@ rules:
     level: warning
 
   # don't bother me with this rule
-  indentation: enable
+  comments: disable
+  comments-indentation: disable

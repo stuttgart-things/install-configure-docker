@@ -2,7 +2,12 @@
 - name: Download and install kind+kubectl
   ansible.builtin.include_role:
     name: download-install-binary
-  loop: "{{ lookup('dict', kind_bins, wantlist=True) }}"
+
+- name: Rename kind binary
+  ansible.builtin.copy:
+    src: "/usr/bin/kind-linux-amd64"
+    dest: "/usr/bin/kind"
+    remote_src: true
 
 - name: Generate kind config
   ansible.builtin.template:
