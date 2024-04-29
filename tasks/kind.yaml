@@ -3,6 +3,7 @@
   ansible.builtin.include_role:
     name: download-install-binary
   loop: "{{ lookup('dict', bin, wantlist=True) }}"
+  allow_duplicates: false
 
 - name: Rename kind binary
   ansible.builtin.copy:
