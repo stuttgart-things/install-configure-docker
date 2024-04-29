@@ -22,6 +22,7 @@ cat <<EOF > /tmp/requirements.yaml
 ---
 roles:
 - src: https://github.com/stuttgart-things/install-configure-docker.git
+  version: 2024-04-29
   scm: git
 - src: https://github.com/stuttgart-things/install-requirements.git
   scm: git
