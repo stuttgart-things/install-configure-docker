@@ -1,0 +1,10 @@
+---
+- hosts: all #"{{ target_host }}"
+  become: true
+  
+  vars:
+    docker_install_compose: true
+    docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
+
+  roles:
+    - install-configure-docker
