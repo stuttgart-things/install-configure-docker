@@ -164,7 +164,6 @@ Author Information
 Andre Ebert (andre.ebert@sva.de); 04/2023
 
 Patrick Hermann (patrick.hermann@sva.de); 04/2020
-
+```
 
 (This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.)
-```
