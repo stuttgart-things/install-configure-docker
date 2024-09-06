@@ -22,6 +22,7 @@ cat <<EOF > /tmp/requirements.yaml
 ---
 roles:
 - src: https://github.com/stuttgart-things/install-configure-docker.git
+  version: 2024-04-29
   scm: git
 - src: https://github.com/stuttgart-things/install-requirements.git
   scm: git
@@ -117,6 +118,7 @@ cat <<EOF > install-configure-docker.yaml
     install_kind: true
     kind_version: 0.22.0
     kubectl_version: 1.30.0
+
 EOF
 ```
 
@@ -164,7 +166,7 @@ Author Information
 Andre Ebert (andre.ebert@sva.de); 04/2023
 
 Patrick Hermann (patrick.hermann@sva.de); 04/2020
-
+```
 
 (This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.)
-```
+
