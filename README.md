@@ -119,8 +119,6 @@ cat <<EOF > install-configure-docker.yaml
     kind_version: 0.22.0
     kubectl_version: 1.30.0
 
-  roles:
-    - install-configure-docker
 EOF
 ```
 
@@ -171,3 +169,4 @@ Patrick Hermann (patrick.hermann@sva.de); 04/2020
 ```
 
 (This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.)
+
