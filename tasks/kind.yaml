@@ -7,6 +7,7 @@
   ansible.builtin.copy:
     src: "/usr/bin/kind-linux-amd64"
     dest: "/usr/bin/kind"
+    mode: u=rwx,g=rx,o=rx
     remote_src: true
 
 - name: Generate kind config
