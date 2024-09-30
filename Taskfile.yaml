@@ -1,0 +1,64 @@
+---
+version: 3
+vars:
+  BRANCH:
+    sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD); else echo main ; fi
+  MOLECULE_SCENARIO: docker_test
+
+# PRECONDITION TO CHECK IF THE VIRTUAL ENVIRONMENT IS ACTIVATED
+venv-precondition: &venv
+  - sh: |
+      pip -V | grep '.venv' >/dev/null 2>&1
+    msg: "The pip version output does not contain .venv, Halting. Run task setup-molecule and/or source .venv/bin/activate"
+
+tasks:
+  run-molecule:
+    preconditions: *venv
+    cmds:
+      - molecule test -s {{ .MOLECULE_SCENARIO }}
+
+  setup-molecule:
+    preconditions: *venv
+    cmds:
+      - pip install -U setuptools pip 'molecule'
+      - pip install molecule-docker
+      - molecule --version
+
+  setup-venv:
+    desc: "Setup python virtual environment"
+    cmds:
+      - rm -rf ./.venv
+      - python3 -m venv ./.venv
+      - echo "DON'T FORGET TO RUN - source ./venv/bin/activate"
+
+  branch:
+    desc: Create branch from main
+    cmds:
+      - git checkout main
+      - git branch
+      - git pull
+      - |
+        echo "Enter to be created (remote) branch:"
+        read BRANCH_NAME;
+        git checkout -b ${BRANCH_NAME}
+        git push origin ${BRANCH_NAME}
+      - git branch
+      - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
+
+  commit:
+    desc: Commit + push code into branch
+    cmds:
+      - rm -rf dist/
+      - git branch --set-upstream-to=origin/{{ .BRANCH }}
+      - git pull
+      - |
+        echo "ENTER COMMIT MESSAGE"
+        read COMMIT_MESSAGE;
+        git add *
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "committing changes"
+          git commit --allow-empty -a -m "$(echo ${COMMIT_MESSAGE})"
+        else
+          echo "no changes"
+        fi
+        git push origin -u {{ .BRANCH }}
