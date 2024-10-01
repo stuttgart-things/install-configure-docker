@@ -3,13 +3,6 @@
   ansible.builtin.include_role:
     name: download-install-binary
 
-- name: Rename kind binary
-  ansible.builtin.copy:
-    src: "/usr/bin/kind-linux-amd64"
-    dest: "/usr/bin/kind"
-    mode: u=rwx,g=rx,o=rx
-    remote_src: true
-
 - name: Generate kind config
   ansible.builtin.template:
     src: kind.yaml.j2
@@ -19,3 +12,5 @@
   ansible.builtin.shell: |
     kind create cluster --config {{ kind_cluster_name }}.yaml
     kind get clusters
+    mkdir -p ~/.kube/
+    kind get kubeconfig > ~/.kube/config
