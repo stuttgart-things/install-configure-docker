@@ -5,7 +5,10 @@
   vars:
     docker_install_compose: true
     docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
-    install_kind: false
+    install_kind: true
+    kind_version: 0.24.0
+    kubectl_version: v1.30.2
+    create_kind_cluster: false
 
   roles:
     - install-configure-docker
