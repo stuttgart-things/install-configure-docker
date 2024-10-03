@@ -3,7 +3,11 @@ role_name_check: 1
 dependency:
   name: galaxy
   options:
-    ignore-errors: true
+    ignore-certs: True
+    requirements-file: requirements.yaml
+    ignore-errors: false
+    force: True
+
 driver:
   name: docker
 platforms:
