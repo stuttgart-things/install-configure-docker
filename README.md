@@ -59,7 +59,7 @@ cat <<EOF > install-configure-docker.yaml
 ---
 - hosts: "{{ target_host | default('all') }}"
   become: true
-  
+
   vars:
     docker_install_compose: true
     docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
@@ -80,7 +80,7 @@ cat <<EOF > install-configure-docker.yaml
   become: true
 
   vars:
-    docker_install_compose: true 
+    docker_install_compose: true
     docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
 
     add_registry_mirrors: true
@@ -112,7 +112,7 @@ cat <<EOF > install-configure-docker.yaml
   become: true
 
   vars:
-    docker_install_compose: true 
+    docker_install_compose: true
     docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
 
     install_kind: true
@@ -131,6 +131,27 @@ ansible-playbook -i inventory install-configure-docker.yaml -vv
 ```
 
 </details>
+
+## DEV-TASKS
+
+```bash
+task: Available tasks for this project:
+* branch:           Create branch from main
+* commit:           Commit + push code into branch
+* setup-venv:       Setup python virtual environment
+```
+
+### TESTING
+
+```bash
+task setup-venv
+source ./.venv/bin/activate
+task setup-molecule
+task run-molecule
+
+# deactivate
+#rm -rf ./.venv/
+```
 
 ## License
 <details><summary>LICENSE</summary>
@@ -169,4 +190,3 @@ Patrick Hermann (patrick.hermann@sva.de); 04/2020
 ```
 
 (This role was created in 2017 by Jeff Geerling, author of Ansible for DevOps - adopted to be used in multiple stuttgart-things projects by Patrick Hermann in 2020.)
-

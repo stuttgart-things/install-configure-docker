@@ -1,0 +1,9 @@
+ansible-lint>=3.0.0,<6.0.0,!=4.3.0 # MIT
+ansible-compat # MIT
+docker # Apache-2.0
+molecule # MIT
+molecule-plugins[docker] # MIT
+pytest-metadata # MPL
+pytest-molecule # MIT
+pytest-testinfra
+yamllint # GPLv3

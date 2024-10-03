@@ -9,7 +9,7 @@ vars:
 venv-precondition: &venv
   - sh: |
       pip -V | grep '.venv' >/dev/null 2>&1
-    msg: "The pip version output does not contain .venv, Halting. Run task setup-molecule and/or source .venv/bin/activate"
+    msg: "The pip version output does not contain .venv, Halting. Run task setup-venv, source .venv/bin/activate & task setup-molecule to proceed"
 
 tasks:
   run-molecule:
@@ -20,8 +20,8 @@ tasks:
   setup-molecule:
     preconditions: *venv
     cmds:
-      - pip install -U setuptools pip 'molecule'
-      - pip install molecule-docker
+      - pip install -r molecule-requirements.txt
+      # - pip install molecule-docker
       - molecule --version
 
   setup-venv:
@@ -29,7 +29,7 @@ tasks:
     cmds:
       - rm -rf ./.venv
       - python3 -m venv ./.venv
-      - echo "DON'T FORGET TO RUN - source ./venv/bin/activate"
+      - echo "DON'T FORGET TO RUN - source ./.venv/bin/activate"
 
   branch:
     desc: Create branch from main
