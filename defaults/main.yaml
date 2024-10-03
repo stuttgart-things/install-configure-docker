@@ -46,6 +46,7 @@ kind_cluster_name: kind1
 kubectl_version: v1.30.2
 kind_api_port: 6443
 kind_server: 127.0.0.1
+create_kind_cluster: true
 
 bin:
   kubectl:

@@ -14,3 +14,4 @@
     kind get clusters
     mkdir -p ~/.kube/
     kind get kubeconfig > ~/.kube/config
+  when: create_kind_cluster|bool
