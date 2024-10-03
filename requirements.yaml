@@ -2,6 +2,8 @@
 collections:
   - name: community.general
     version: 9.4.0
+  - name: community.docker
+    version: 3.12.2
 
 roles:
   - src: https://github.com/stuttgart-things/install-requirements.git
