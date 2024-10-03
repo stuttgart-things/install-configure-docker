@@ -4,7 +4,8 @@ dependency:
   name: galaxy
   options:
     ignore-certs: True
-    requirements-file: requirements.yaml
+    requirements-file: collections.yaml
+    role-file: roles.yaml
     ignore-errors: false
     force: True
 
