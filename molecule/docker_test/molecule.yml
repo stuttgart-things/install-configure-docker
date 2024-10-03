@@ -6,7 +6,7 @@ dependency:
     ignore-certs: True
     requirements-file: collections.yaml
     role-file: roles.yaml
-    ignore-errors: false
+    ignore-errors: True
     force: True
 
 driver:
