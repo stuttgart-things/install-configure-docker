@@ -1,4 +1,4 @@
-ansible-lint>=3.0.0,<6.0.0,!=4.3.0 # MIT
+ansible-lint>=24.12.2,<24.12.3,!=4.3.0 # MIT
 ansible-compat # MIT
 docker # Apache-2.0
 molecule # MIT
