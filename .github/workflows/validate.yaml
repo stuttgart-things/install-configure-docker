@@ -29,7 +29,7 @@ jobs:
       runs-on: ghr-install-configure-docker-skyami-cicd
       environment-name: k8s
       continue-error: true
-      ansible-image: eu.gcr.io/stuttgart-things/sthings-ansible:10.3.0
+      ansible-image: ghcr.io/stuttgart-things/sthings-ansible:11.1.0
       playbook: tests/test.yml
     needs: yaml-lint
 
