@@ -21,7 +21,6 @@ tasks:
     preconditions: *venv
     cmds:
       - pip install -r molecule-requirements.txt
-      # - pip install molecule-docker
       - molecule --version
 
   setup-venv:
