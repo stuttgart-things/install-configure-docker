@@ -1,7 +1,7 @@
 stuttgart-things/install-configure-docker
 =========================================
 
-deployment and configuration of docker (compose).
+deployment and configuration of docker (-compose).
 
 <details><summary>VARIABLES</summary>
 
