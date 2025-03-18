@@ -8,10 +8,21 @@
     src: kind.yaml.j2
     dest: "{{ kind_cluster_name }}.yaml"
 
+- name: Permissions for kind
+  ansible.builtin.file:
+    path: /usr/bin/kind
+    mode: '0755'
+
 - name: Create kind cluster
   ansible.builtin.shell: |
-    kind create cluster --config {{ kind_cluster_name }}.yaml
+    kind create cluster --config /home/{{ ansible_user }}/{{ kind_cluster_name }}.yaml --name {{ kind_cluster_name }}
     kind get clusters
-    mkdir -p ~/.kube/
-    kind get kubeconfig > ~/.kube/config
+    mkdir -p /home/{{ ansible_user }}/.kube/
+    kind get kubeconfig --name {{ kind_cluster_name }} > /home/{{ ansible_user }}/.kube/config
   when: create_kind_cluster|bool
+
+- name: Permissions for kubeconfig
+  ansible.builtin.file:
+    path: /home/{{ ansible_user }}/.kube/config
+    mode: '0600'
+    owner: "{{ ansible_user }}"	
