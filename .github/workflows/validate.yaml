@@ -13,7 +13,7 @@ on:
 jobs:
   yaml-lint:
     name: Lint yaml files
-    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-yaml-lint.yaml@feature/add-homerun-task-go
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-yaml-lint.yaml@main
     with:
       runs-on: ghr-install-configure-docker-skyami-cicd
       environment-name: k8s
@@ -24,7 +24,7 @@ jobs:
 
   ansible-lint:
     name: Lint ansible code
-    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-ansible-lint.yaml@feature/add-homerun-task-go # ansible-lint-24.2.1
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-ansible-lint.yaml@main # ansible-lint-24.2.1
     with:
       runs-on: ghr-install-configure-docker-skyami-cicd
       environment-name: k8s
