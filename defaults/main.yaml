@@ -94,7 +94,7 @@ bin:
     bin_version: "{{ helm_version }}"
     check_bin_version_before_installing: true
     source_url: "https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz"
-    bin_to_copy: "helm"
+    bin_to_copy: "linux-amd64/helm"
     to_remove: "helm"
     bin_dir: "/usr/bin/helm"
     version_cmd: "version"
