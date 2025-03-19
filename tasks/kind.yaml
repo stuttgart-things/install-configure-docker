@@ -25,4 +25,4 @@
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/.kube/config
     mode: '0600'
-    owner: "{{ ansible_user }}"	
+    owner: "{{ ansible_user }}"	 # comment
