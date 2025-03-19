@@ -15,7 +15,7 @@ tasks:
   run-molecule:
     preconditions: *venv
     cmds:
-      - molecule test -s {{ .MOLECULE_SCENARIO }}
+      - molecule test -s {{ .MOLECULE_SCENARIO }} 
 
   setup-molecule:
     preconditions: *venv
