@@ -6,5 +6,16 @@
     docker_install_compose: true
     install_kind: true
 
+    ansible_user: sthings
+    kind_version: 0.27.0
+    kind_cluster_name: bibi1
+    # ALSO KIND KUBERNETES VERSION
+    kubectl_version: 1.32.3
+    create_kind_cluster: true
+    count_worker_nodes: 3
+    count_controlplane_nodes: 1
+    enable_ingress_ports: true
+    enable_host_paths: true
+
   roles:
     - install-configure-docker
