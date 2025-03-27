@@ -8,21 +8,41 @@
     src: kind.yaml.j2
     dest: "{{ kind_cluster_name }}.yaml"
 
-- name: Permissions for kind
-  ansible.builtin.file:
-    path: /usr/bin/kind
-    mode: '0755'
+# RESTART CONTAINERD
+- name: Restart containerd
+  ansible.builtin.systemd:
+    name: containerd
+    state: restarted
 
-- name: Create kind cluster
-  ansible.builtin.shell: |
-    kind create cluster --config /home/{{ ansible_user }}/{{ kind_cluster_name }}.yaml --name {{ kind_cluster_name }}
-    kind get clusters
-    mkdir -p /home/{{ ansible_user }}/.kube/
-    kind get kubeconfig --name {{ kind_cluster_name }} > /home/{{ ansible_user }}/.kube/config
+- name: Install, configure, and start KinD
   when: create_kind_cluster|bool
+  block:
 
-- name: Permissions for kubeconfig
-  ansible.builtin.file:
-    path: /home/{{ ansible_user }}/.kube/config
-    mode: '0600'
-    owner: "{{ ansible_user }}"	 # comment
+    - name: Check and delete existing kind cluster
+      ansible.builtin.shell: |
+        if kind get clusters | grep -q '^{{ kind_cluster_name }}$'; then
+          kind delete cluster --name {{ kind_cluster_name }}
+        fi
+      args:
+        executable: /bin/bash
+      when: create_kind_cluster|bool
+      register: cluster_cleanup
+      changed_when: "'Deleted' in cluster_cleanup.stdout"
+
+    - name: Create kind cluster
+      ansible.builtin.shell: |
+        mkdir -p /home/{{ ansible_user }}/.kube/
+        kind create cluster --config /home/{{ ansible_user }}/{{ kind_cluster_name }}.yaml --name {{ kind_cluster_name }} --kubeconfig /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
+        kind get clusters
+        kubectl get nodes --kubeconfig /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
+
+    - name: Verify kind cluster
+      ansible.builtin.shell: |
+        kind get clusters
+        kubectl get nodes --kubeconfig /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
+
+    - name: Permissions for kubeconfig
+      ansible.builtin.file:
+        path: /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
+        mode: '0600'
+        owner: "{{ ansible_user }}"
