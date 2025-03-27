@@ -114,10 +114,9 @@ cat <<EOF > install-configure-docker.yaml
   vars:
     docker_install_compose: true
     install_kind: true
-    kind_version: 0.22.0
-    kubectl_version: 1.30.0
 
     ansible_user: sthings
+    kind_version: 0.27.0
     kind_cluster_name: bibi1
     # ALSO KIND KUBERNETES VERSION
     kubectl_version: 1.32.3
