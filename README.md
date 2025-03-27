@@ -113,13 +113,22 @@ cat <<EOF > install-configure-docker.yaml
 
   vars:
     docker_install_compose: true
-    docker_version: '' # leave empty for latest version or set e.g. '=5:23.0.6-1~ubuntu.23.04~lunar'
-
     install_kind: true
     kind_version: 0.22.0
     kubectl_version: 1.30.0
 
-EOF
+    ansible_user: sthings
+    kind_cluster_name: bibi1
+    # ALSO KIND KUBERNETES VERSION
+    kubectl_version: 1.32.3
+    create_kind_cluster: true
+    count_worker_nodes: 3
+    count_controlplane_nodes: 1
+    enable_ingress_ports: true
+    enable_host_paths: true
+
+  roles:
+    - install-configure-docker
 ```
 
 </details>
