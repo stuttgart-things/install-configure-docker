@@ -8,7 +8,6 @@
     src: kind.yaml.j2
     dest: "{{ kind_cluster_name }}.yaml"
 
-# RESTART CONTAINERD
 - name: Restart containerd
   ansible.builtin.systemd:
     name: containerd
@@ -17,7 +16,6 @@
 - name: Install, configure, and start KinD
   when: create_kind_cluster|bool
   block:
-
     - name: Check and delete existing kind cluster
       ansible.builtin.shell: |
         if kind get clusters | grep -q '^{{ kind_cluster_name }}$'; then
@@ -26,6 +24,8 @@
       args:
         executable: /bin/bash
       when: create_kind_cluster|bool
+      become: yes
+      become_user: "{{ ansible_user }}"
       register: cluster_cleanup
       changed_when: "'Deleted' in cluster_cleanup.stdout"
 
@@ -35,14 +35,12 @@
         kind create cluster --config /home/{{ ansible_user }}/{{ kind_cluster_name }}.yaml --name {{ kind_cluster_name }} --kubeconfig /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
         kind get clusters
         kubectl get nodes --kubeconfig /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
 
     - name: Verify kind cluster
       ansible.builtin.shell: |
         kind get clusters
         kubectl get nodes --kubeconfig /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
-
-    - name: Permissions for kubeconfig
-      ansible.builtin.file:
-        path: /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
-        mode: '0600'
-        owner: "{{ ansible_user }}"
+      become: yes
+      become_user: "{{ ansible_user }}"
