@@ -44,3 +44,7 @@
         kubectl get nodes --kubeconfig /home/{{ ansible_user }}/.kube/{{ kind_cluster_name }}
       become: yes
       become_user: "{{ ansible_user }}"
+
+    - name: Set kind name as fact
+      set_fact:
+        kind_cluster_name: "{{ kind_cluster_name }}"
