@@ -10,6 +10,8 @@ add_registry_mirrors: false
 login_into_private_registry: false
 docker_python_modules:
   - name: docker-py
+kind_cluster_config_path: /home/{{ ansible_user }}/
+kubeconfig_folder: /home/{{ ansible_user }}/.kube
 
 # Service options.
 docker_service_state: started
