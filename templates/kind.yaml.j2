@@ -6,7 +6,7 @@ networking:
   disableDefaultCNI: {{ disableDefaultCNI | default(false) }}
   kubeProxyMode: {{ kubeProxyMode | default("none") }}
 nodes:
-{%  for i in range(count_controlplane_nodes) %}
+{%  for i in range(count_controlplane_nodes | int) %}
   - role: control-plane
     image: kindest/node:v{{ kubectl_version }}
 {%  if enable_ingress_ports %}
@@ -25,7 +25,7 @@ nodes:
         protocol: TCP
 {%  endif %}
 {%  endfor %}
-{%  for i in range(count_worker_nodes) %}
+{%  for i in range(count_worker_nodes | int) %}
   - role: worker
     image: kindest/node:v{{ kubectl_version }}
     extraMounts:
