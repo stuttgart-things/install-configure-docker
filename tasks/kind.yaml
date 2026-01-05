@@ -122,11 +122,3 @@
       loop_control:
         label: "{{ item.location }} (state: {{ item.state }})"
       when: helmfile_deployments is defined and helmfile_deployments | length > 0
-
-    - name: Display helmfile apply results
-      ansible.builtin.debug:
-        msg: "{{ item.stdout_lines }}"
-      loop: "{{ helmfile_apply_result.results }}"
-      loop_control:
-        label: "{{ item.item.location }}"
-      when: helmfile_apply_result is defined
