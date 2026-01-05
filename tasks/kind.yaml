@@ -8,6 +8,10 @@
     src: kind.yaml.j2
     dest: "{{ kind_cluster_config_path }}/{{ kind_cluster_name }}.yaml"
 
+- name: Validate kind config
+  ansible.builtin.shell: |
+    yq "{{ kind_cluster_config_path }}/{{ kind_cluster_name }}.yaml"
+
 - name: Restart containerd
   ansible.builtin.systemd:
     name: containerd
@@ -16,24 +20,60 @@
 - name: Install, configure, and start KinD
   when: create_kind_cluster|bool
   block:
-    - name: Check and delete existing kind cluster
+    - name: Check if kind cluster exists
       ansible.builtin.shell: |
-        if kind get clusters | grep -q '^{{ kind_cluster_name }}$'; then
-          kind delete cluster --name {{ kind_cluster_name }}
-        fi
+        kind get clusters | grep -q '^{{ kind_cluster_name }}$'
       args:
         executable: /bin/bash
-      when: create_kind_cluster|bool
       become: yes
       become_user: "{{ ansible_user }}"
+      register: cluster_exists
+      failed_when: false
+      changed_when: false
+
+    - name: Delete existing kind cluster
+      ansible.builtin.shell: |
+        kind delete cluster --name {{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
+      when:
+        - rebuild_kind_cluster | default(false) | bool
+        - cluster_exists.rc == 0
       register: cluster_cleanup
-      changed_when: "'Deleted' in cluster_cleanup.stdout"
 
     - name: Create kind cluster
       ansible.builtin.shell: |
         mkdir -p {{ kubeconfig_folder }}
         kind create cluster --config {{ kind_cluster_config_path }}/{{ kind_cluster_name }}.yaml --name {{ kind_cluster_name }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
         kind get clusters
+      become: yes
+      become_user: "{{ ansible_user }}"
+      when: >
+        (rebuild_kind_cluster | default(false) | bool) or
+        (cluster_exists.rc != 0)
+      register: cluster_create
+
+    - name: Display cluster status
+      ansible.builtin.debug:
+        msg: "Cluster {{ kind_cluster_name }} {{ 'recreated' if (rebuild_kind_cluster | default(false) | bool) else 'already exists and was not modified' if (cluster_exists.rc == 0) else 'created' }}"
+
+    - name: Verify cluster nodes
+      ansible.builtin.shell: |
+        kubectl get nodes --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
+
+    - name: Update kubeconfig with real API server address
+      ansible.builtin.shell: |
+        echo ""
+        echo "Updating kubeconfig with real IP address..."
+        yq -i '.clusters[0].cluster.server = "https://{{ api_server_address }}:{{ api_server_port }}"' {{ kubeconfig_folder }}/{{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
+      when: api_server_address is defined
+
+    - name: Verify cluster nodes
+      ansible.builtin.shell: |
         kubectl get nodes --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
       become: yes
       become_user: "{{ ansible_user }}"
@@ -48,3 +88,57 @@
     - name: Set kind name as fact
       set_fact:
         kind_cluster_name: "{{ kind_cluster_name }}"
+
+    - name: Apply Kustomize configurations (server-side apply)
+      ansible.builtin.shell: |
+        kubectl apply -k {{ item }} \
+          --server-side \
+          --force-conflicts \
+          --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
+      loop: "{{ kustomize_urls }}"
+      when: kustomize_urls is defined and kustomize_urls | length > 0
+
+    - name: Validate and process Helmfile deployments
+      ansible.builtin.assert:
+        that:
+          - item.state in ['present', 'absent', 'sync']
+        msg: "State must be 'present', 'absent', or 'sync'"
+      loop: "{{ helmfile_deployments }}"
+      loop_control:
+        label: "{{ item.location }}"
+      when: helmfile_deployments is defined and helmfile_deployments | length > 0
+
+    - name: Apply, Sync, or Destroy Helmfile configurations
+      ansible.builtin.shell:
+        cmd: |
+          helmfile init --force
+          {% set state_args = [] %}
+          {% if item.state_values is defined %}
+          {% for key, value in item.state_values.items() %}
+          {% set _ = state_args.append('--state-values-set ' ~ key ~ '=' ~ value|string) %}
+          {% endfor %}
+          {% endif %}
+
+          {% if item.state == 'present' %}
+          helmfile apply -f {{ item.location }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }} {{ state_args | join(' ') }}
+          {% elif item.state == 'absent' %}
+          helmfile destroy -f {{ item.location }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }} {{ state_args | join(' ') }}
+          {% elif item.state == 'sync' %}
+          helmfile sync -f {{ item.location }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }} {{ state_args | join(' ') }}
+          {% endif %}
+      become: yes
+      become_user: "{{ ansible_user }}"
+      loop: "{{ helmfile_deployments }}"
+      loop_control:
+        label: "{{ item.location }} (state: {{ item.state }})"
+      when: helmfile_deployments is defined and helmfile_deployments | length > 0
+
+    - name: Display helmfile apply results
+      ansible.builtin.debug:
+        msg: "{{ item.stdout_lines }}"
+      loop: "{{ helmfile_apply_result.results }}"
+      loop_control:
+        label: "{{ item.item.location }}"
+      when: helmfile_apply_result is defined

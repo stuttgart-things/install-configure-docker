@@ -5,6 +5,8 @@ docker_ce_version: '' # 5:23.0.6*
 docker_package: "docker-{{ docker_edition }}{{ docker_version }}"
 docker_package_state: present
 
+
+
 set_proxy: false
 add_registry_mirrors: false
 login_into_private_registry: false
@@ -43,22 +45,53 @@ docker_users: [sthings]
 
 # kind
 install_kind: true
-kind_version: 0.27.0
-kind_cluster_name: kind1
-kubectl_version: 1.32.3
-kind_api_port: 6443
-kind_server: 127.0.0.1
+# To rebuild (delete and recreate) existing cluster
+rebuild_kind_cluster: true
+kind_version: 0.31.0
+kind_cluster_name: dev
+kubectl_version: 1.35.0
+kind_api_port: 33643
 create_kind_cluster: true
-helmfile_version: 0.171.0
-helm_version: 3.17.2
-k9s_version: 0.40.10
-count_worker_nodes: 3
+helmfile_version: 1.2.3
+helm_version: 4.0.4
+yq_version: 4.49.2 # datasource=github-tags depName=mikefarah/yq
+k9s_version: 0.50.16
+count_worker_nodes: 2
 count_controlplane_nodes: 1
 disableDefaultCNI: true
 kubeProxyMode: "none"
-node_labels: "ingress-ready=true"
-enable_ingress_ports: true
+#node_labels: "ingress-ready=true"
+enable_ingress_ports: false  # Disabled because using custom ports
 enable_host_paths: true
+
+# Feature Gates
+feature_gates:
+  ImageVolume: true
+
+# Custom Control Plane Port Mappings
+custom_control_plane_ports:
+  - containerPort: 6443
+    hostPort: 33643
+    protocol: TCP
+  - containerPort: 34100
+    hostPort: 34100
+  - containerPort: 34101
+    hostPort: 34101
+
+# Worker Node Specific Mounts
+worker_node_mounts:
+  0:  # First worker (index 0)
+    - hostPath: /mnt/target31
+      containerPath: /data
+  1:  # Second worker (index 1)
+    - hostPath: /mnt/target32
+      containerPath: /data
+
+# Containerd Config Patches
+# containerd_config_patches:
+#   - |
+#     [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+#       endpoint = ["https://registry-1.docker.io"]
 
 bin:
   kubectl:
@@ -111,3 +144,13 @@ bin:
     bin_dir: "/usr/bin/k9s"
     version_cmd: "version"
     target_version: "{{ k9s_version }}"
+  yq:
+    bin_name: yq
+    bin_version: "v{{ yq_version }}"
+    check_bin_version_before_installing: true
+    source_url: "https://github.com/mikefarah/yq/releases/download/v{{ yq_version }}/yq_linux_amd64.tar.gz"
+    bin_to_copy: yq_linux_amd64
+    to_remove: ""
+    bin_dir: "/usr/bin/yq"
+    version_cmd: " version"
+    target_version: "v{{ yq_version }}"

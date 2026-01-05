@@ -15,7 +15,7 @@ jobs:
     name: Lint yaml files
     uses: stuttgart-things/github-workflow-templates/.github/workflows/call-yaml-lint.yaml@main
     with:
-      runs-on: ghr-install-configure-docker-skyami-cicd
+      runs-on: ghr-install-configure-docker-in-cluster
       environment-name: k8s
       continue-error: true
       yamllint-version: 1
@@ -26,7 +26,7 @@ jobs:
     name: Lint ansible code
     uses: stuttgart-things/github-workflow-templates/.github/workflows/call-ansible-lint.yaml@main # ansible-lint-24.2.1
     with:
-      runs-on: ghr-install-configure-docker-skyami-cicd
+      runs-on: ghr-install-configure-docker-in-cluster
       environment-name: k8s
       continue-error: true
       ansible-image: ghcr.io/stuttgart-things/sthings-ansible:11.1.0
