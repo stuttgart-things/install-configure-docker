@@ -1,5 +1,9 @@
 ---
 version: 3
+includes:
+  git:
+    taskfile: https://raw.githubusercontent.com/stuttgart-things/tasks/refs/heads/main/git/git.yaml
+
 vars:
   BRANCH:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD); else echo main ; fi
@@ -16,26 +20,12 @@ tasks:
     desc: Select a task to run
     cmds:
       - |
-        task=$(yq e '.tasks | keys' Taskfile.yaml | sed 's/^- //' | gum choose)
-        task ${task}
+        # Extract task names (keep internal colons, remove trailing colon)
+        task_name=$(task -l | awk '/^\*/ {print $2}' | \
+          sed 's/:$//' | gum choose)
 
-  switch-remote:
-    desc: Switch to remote branch
-    cmds:
-      - |
-        git fetch
-        branches=($(git branch -r | grep -v 'origin/HEAD' | sed 's|origin/||'))
-        branch=$(printf "%s\n" "${branches[@]}" | gum choose)
-        git switch -c ${branch} --track origin/${branch}
-        git branch && git status
-
-  switch-local:
-    desc: Switch to local branch
-    cmds:
-      - |
-        branches=$(git branch -a | grep -v 'remotes')
-        branch=$(printf "%s\n" "${branches[@]}" | gum choose)
-        git checkout ${branch} && git pull
+        # Run the selected task
+        [ -n "$task_name" ] && task "$task_name"
 
   run-molecule:
     preconditions: *venv
@@ -54,45 +44,3 @@ tasks:
       - rm -rf ./.venv
       - python3 -m venv ./.venv
       - echo "DON'T FORGET TO RUN - source ./.venv/bin/activate"
-
-  branch:
-    desc: Create branch from main
-    cmds:
-      - git checkout main
-      - git branch
-      - git pull
-      - |
-        echo "Enter to be created (remote) branch:"
-        read BRANCH_NAME;
-        git checkout -b ${BRANCH_NAME}
-        git push origin ${BRANCH_NAME}
-      - git branch
-      - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
-
-  commit:
-    desc: Commit + push code into branch
-    cmds:
-      - rm -rf dist/
-      - git branch --set-upstream-to=origin/{{ .BRANCH }}
-      - git pull
-      - |
-        echo "ENTER COMMIT MESSAGE"
-        read COMMIT_MESSAGE;
-        git add *
-        if [[ -n $(git status --porcelain) ]]; then
-          echo "committing changes"
-          git commit --allow-empty -a -m "$(echo ${COMMIT_MESSAGE})"
-        else
-          echo "no changes"
-        fi
-        git push origin -u {{ .BRANCH }}
-
-  pr:
-    desc: Create pull request into main
-    cmds:
-      - task: commit
-      - gh pr create -t "{{ .BRANCH }}" -b "{{ .BRANCH }} branch into main"
-      - sleep 2s
-      - gh pr checks $(gh pr list | grep "^[^#;]" | awk '{print $1}') --watch
-      - gh pr merge $(gh pr list | grep "^[^#;]" | grep '{{ .BRANCH }}' | awk '{print $1}') --auto --rebase --delete-branch
-      - git checkout main && git pull
