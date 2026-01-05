@@ -53,16 +53,6 @@
         (cluster_exists.rc != 0)
       register: cluster_create
 
-    - name: Display cluster status
-      ansible.builtin.debug:
-        msg: "Cluster {{ kind_cluster_name }} {{ 'recreated' if (rebuild_kind_cluster | default(false) | bool) else 'already exists and was not modified' if (cluster_exists.rc == 0) else 'created' }}"
-
-    - name: Verify cluster nodes
-      ansible.builtin.shell: |
-        kubectl get nodes --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
-      become_user: "{{ ansible_user }}"
-
     - name: Update kubeconfig with real API server address
       ansible.builtin.shell: |
         echo ""
@@ -72,11 +62,9 @@
       become_user: "{{ ansible_user }}"
       when: api_server_address is defined
 
-    - name: Verify cluster nodes
-      ansible.builtin.shell: |
-        kubectl get nodes --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
-      become_user: "{{ ansible_user }}"
+    - name: Display cluster status
+      ansible.builtin.debug:
+        msg: "Cluster {{ kind_cluster_name }} {{ 'recreated' if (rebuild_kind_cluster | default(false) | bool) else 'already exists and was not modified' if (cluster_exists.rc == 0) else 'created' }}"
 
     - name: Verify kind cluster
       ansible.builtin.shell: |
