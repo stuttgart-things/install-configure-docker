@@ -1,70 +1,75 @@
 kind: Cluster
 name: {{ kind_cluster_name }}
 apiVersion: kind.x-k8s.io/v1alpha4
-{%  if feature_gates is defined %}
+{% if feature_gates is defined %}
 featureGates:
-{%    for gate, enabled in feature_gates.items() %}
+{% for gate, enabled in feature_gates.items() %}
   {{ gate }}: {{ enabled }}
-{%    endfor %}
-{%  endif %}
+{% endfor %}
+{% endif %}
 networking:
 {% if api_server_address is defined %}
   apiServerAddress: '{{ api_server_address }}'
 {% endif %}
+{% if api_server_port is defined %}
+  apiServerPort: {{ api_server_port }}
+{% endif %}
   disableDefaultCNI: {{ disableDefaultCNI | default(false) }}
   kubeProxyMode: {{ kubeProxyMode | default("none") }}
 nodes:
-{%  for i in range(count_controlplane_nodes | int) %}
+{% for i in range(count_controlplane_nodes | int) %}
   - role: control-plane
     image: kindest/node:v{{ kubectl_version }}
-{%  if enable_ingress_ports or custom_control_plane_ports %}
-{%    if node_labels is defined %}
+{% if enable_ingress_ports or custom_control_plane_ports %}
+{% if node_labels is defined %}
     kubeadmConfigPatches:
       - |
         kind: InitConfiguration
         nodeRegistration:
           kubeletExtraArgs:
             node-labels: {{ node_labels }}
-{%    endif %}
+{% endif %}
     extraPortMappings:
-{%    if custom_control_plane_ports is defined %}
-{%      for port_mapping in custom_control_plane_ports %}
+{% if custom_control_plane_ports is defined %}
+{% for port_mapping in custom_control_plane_ports %}
+{% if port_mapping.containerPort != 6443 %}
       - containerPort: {{ port_mapping.containerPort }}
         hostPort: {{ port_mapping.hostPort }}
-{%        if port_mapping.protocol is defined %}
+{% if port_mapping.protocol is defined %}
         protocol: {{ port_mapping.protocol }}
-{%        endif %}
-{%      endfor %}
-{%    elif enable_ingress_ports is defined %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% elif enable_ingress_ports is defined %}
       - containerPort: 80
         hostPort: 80
         protocol: TCP
       - containerPort: 443
         hostPort: 443
         protocol: TCP
-{%    endif %}
-{%  endif %}
-{%  endfor %}
-{%  for i in range(count_worker_nodes | int) %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% for i in range(count_worker_nodes | int) %}
   - role: worker
     image: kindest/node:v{{ kubectl_version }}
-{%  if enable_host_paths %}
+{% if enable_host_paths %}
     extraMounts:
-{%    if worker_node_mounts and worker_node_mounts[i] is defined %}
-{%      for mount in worker_node_mounts[i] %}
+{% if worker_node_mounts and worker_node_mounts[i] is defined %}
+{% for mount in worker_node_mounts[i] %}
       - hostPath: {{ mount.hostPath }}
         containerPath: {{ mount.containerPath }}
-{%      endfor %}
-{%    else %}
-      - hostPath: /mnt/data-node{{ i + 1 }}
+{% endfor %}
+{% else %}
+      - hostPath: /mnt/{{ kind_cluster_name }}-data-node{{ i + 1 }}
         containerPath: /data
-{%    endif %}
-{%  endif %}
-{%  endfor %}
-{%  if containerd_config_patches is defined %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% if containerd_config_patches is defined %}
 containerdConfigPatches:
 {% for patch in containerd_config_patches %}
   - |-
 {{ patch | indent(4, first=True) }}
 {% endfor %}
-{%  endif %}
+{% endif %}

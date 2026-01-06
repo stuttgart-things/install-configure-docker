@@ -1,0 +1,31 @@
+---
+- name: Check current inotify limits
+  ansible.builtin.command: "sysctl {{ item }}"
+  loop:
+    - fs.inotify.max_user_watches
+    - fs.inotify.max_user_instances
+  register: current_limits
+  changed_when: false
+
+- name: Display current inotify limits
+  ansible.builtin.debug:
+    msg: "{{ item.stdout }}"
+  loop: "{{ current_limits.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: Set inotify max_user_watches
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_watches
+    value: '524288'
+    state: present
+    sysctl_set: yes
+    reload: yes
+
+- name: Set inotify max_user_instances
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: '512'
+    state: present
+    sysctl_set: yes
+    reload: yes

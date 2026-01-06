@@ -6,7 +6,6 @@ docker_package: "docker-{{ docker_edition }}{{ docker_version }}"
 docker_package_state: present
 
 
-
 set_proxy: false
 add_registry_mirrors: false
 login_into_private_registry: false
@@ -77,6 +76,9 @@ custom_control_plane_ports:
     hostPort: 34100
   - containerPort: 34101
     hostPort: 34101
+
+set_inotify: true
+install_kind_bins: true
 
 # Worker Node Specific Mounts
 worker_node_mounts:
