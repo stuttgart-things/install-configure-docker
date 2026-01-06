@@ -2,6 +2,7 @@
 - name: Download and install kind+kubectl
   ansible.builtin.include_role:
     name: download-install-binary
+  when: install_kind_bins|bool
 
 - name: Generate kind config
   ansible.builtin.template:
