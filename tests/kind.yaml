@@ -1,5 +1,6 @@
 ---
 # export ANSIBLE_ROLES_PATH=~/projects/ansible-dev
+# cd =~/projects/ansible-dev/install-configure-docker
 # ansible-playbook ./tests/kind.yaml -i /tmp/inv -vv
 - hosts: all
   become: true
