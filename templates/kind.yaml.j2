@@ -11,16 +11,12 @@ networking:
 {% if api_server_address is defined %}
   apiServerAddress: '{{ api_server_address }}'
 {% endif %}
-{% if api_server_port is defined %}
-  apiServerPort: {{ api_server_port }}
-{% endif %}
   disableDefaultCNI: {{ disableDefaultCNI | default(false) }}
   kubeProxyMode: {{ kubeProxyMode | default("none") }}
 nodes:
 {% for i in range(count_controlplane_nodes | int) %}
   - role: control-plane
     image: kindest/node:v{{ kubectl_version }}
-{% if enable_ingress_ports or custom_control_plane_ports %}
 {% if node_labels is defined %}
     kubeadmConfigPatches:
       - |
@@ -29,7 +25,13 @@ nodes:
           kubeletExtraArgs:
             node-labels: {{ node_labels }}
 {% endif %}
+{% if api_server_port is defined or custom_control_plane_ports is defined or enable_ingress_ports is defined %}
     extraPortMappings:
+{% if api_server_port is defined %}
+      - containerPort: 6443
+        hostPort: {{ api_server_port }}
+        protocol: TCP
+{% endif %}
 {% if custom_control_plane_ports is defined %}
 {% for port_mapping in custom_control_plane_ports %}
 {% if port_mapping.containerPort != 6443 %}
