@@ -4,6 +4,11 @@
     name: download-install-binary
   when: install_kind_bins|bool
 
+- name: Generate random port for API server
+  set_fact:
+    api_server_port: "{{ range(33000, 36001) | random }}"
+  when: api_server_port is not defined and generate_api_server_port|default(true)|bool
+
 - name: Generate kind config
   ansible.builtin.template:
     src: kind.yaml.j2
@@ -35,6 +40,7 @@
     - name: Delete existing kind cluster
       ansible.builtin.shell: |
         kind delete cluster --name {{ kind_cluster_name }}
+        rm -rf {{ kubeconfig_folder }}/{{ kind_cluster_name }} || true
       become: yes
       become_user: "{{ ansible_user }}"
       when:
@@ -123,3 +129,28 @@
       loop_control:
         label: "{{ item.location }} (state: {{ item.state }})"
       when: helmfile_deployments is defined and helmfile_deployments | length > 0
+
+    - name: Apply manifests
+      ansible.builtin.shell: |
+        kubectl apply -k {{ item }} \
+          --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
+      loop: "{{ manifest_urls }}"
+      when: manifest_urls is defined and manifest_urls | length > 0
+      ignore_errors: yes
+
+    - name: Print copy-paste command to recreate kubeconfig
+      ansible.builtin.shell: |
+        echo "echo \"$(base64 -w0 {{ kubeconfig_folder }}/{{ kind_cluster_name }})\" | base64 -d > kubeconfig"
+      become: yes
+      become_user: "{{ ansible_user }}"
+      register: kubeconfig_copy_cmd
+      changed_when: false
+
+    - name: Display kubeconfig copy command
+      ansible.builtin.debug:
+        msg: |
+          Copy & paste this command on the target machine:
+
+          {{ kubeconfig_copy_cmd.stdout }}
