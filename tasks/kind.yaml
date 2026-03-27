@@ -50,6 +50,7 @@
 
     - name: Create kind cluster
       ansible.builtin.shell: |
+        set -e
         mkdir -p {{ kubeconfig_folder }}
         kind create cluster --config {{ kind_cluster_config_path }}/{{ kind_cluster_name }}.yaml --name {{ kind_cluster_name }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
         kind get clusters

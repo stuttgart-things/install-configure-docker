@@ -16,7 +16,7 @@ networking:
 nodes:
 {% for i in range(count_controlplane_nodes | int) %}
   - role: control-plane
-    image: kindest/node:v{{ kubectl_version }}
+    image: kindest/node:v{{ kind_node_image_version }}
 {% if node_labels is defined %}
     kubeadmConfigPatches:
       - |
@@ -54,7 +54,7 @@ nodes:
 {% endfor %}
 {% for i in range(count_worker_nodes | int) %}
   - role: worker
-    image: kindest/node:v{{ kubectl_version }}
+    image: kindest/node:v{{ kind_node_image_version }}
 {% if enable_host_paths %}
     extraMounts:
 {% if worker_node_mounts and worker_node_mounts[i] is defined %}

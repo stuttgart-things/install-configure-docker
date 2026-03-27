@@ -50,6 +50,7 @@ rebuild_kind_cluster: true
 kind_version: 0.31.0
 kind_cluster_name: dev
 kubectl_version: 1.35.0
+kind_node_image_version: 1.35.0
 kind_api_port: 33643
 create_kind_cluster: true
 helmfile_version: 1.2.3

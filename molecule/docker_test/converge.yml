@@ -10,6 +10,7 @@
     kind_version: 0.27.0
     kind_cluster_name: kind1
     kubectl_version: 1.32.3
+    kind_node_image_version: 1.32.3
     kind_api_port: 6443
     kind_server: 127.0.0.1
     create_kind_cluster: true
