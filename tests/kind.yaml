@@ -17,7 +17,6 @@
     count_worker_nodes: 2
     count_controlplane_nodes: 1
 
-
     custom_control_plane_ports:
       - containerPort: "{{ port1 | default(range(34000, 36001) | random) }}"
         hostPort: "{{ port1 | default(range(34000, 36001) | random) }}"
