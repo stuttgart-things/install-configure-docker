@@ -62,7 +62,7 @@ count_controlplane_nodes: 1
 disableDefaultCNI: true
 kubeProxyMode: "none"
 #node_labels: "ingress-ready=true"
-enable_ingress_ports: false  # Disabled because using custom ports
+enable_ingress_ports: true
 enable_host_paths: true
 
 # Feature Gates
@@ -70,14 +70,12 @@ feature_gates:
   ImageVolume: true
 
 # Custom Control Plane Port Mappings
-custom_control_plane_ports:
-  - containerPort: 6443
-    hostPort: 33643
-    protocol: TCP
-  - containerPort: 34100
-    hostPort: 34100
-  - containerPort: 34101
-    hostPort: 34101
+# Uncomment and set fixed ports only for single-cluster hosts.
+# When multiple kind clusters coexist, use random ports to avoid collisions:
+#   custom_control_plane_ports:
+#     - containerPort: "{{ port1 | default(range(34000, 36001) | random) }}"
+#       hostPort: "{{ port1 | default(range(34000, 36001) | random) }}"
+#       protocol: TCP
 
 set_inotify: true
 install_kind_bins: true

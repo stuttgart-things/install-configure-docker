@@ -34,7 +34,7 @@ nodes:
 {% endif %}
 {% if custom_control_plane_ports is defined %}
 {% for port_mapping in custom_control_plane_ports %}
-{% if port_mapping.containerPort != 6443 %}
+{% if port_mapping.containerPort | int != 6443 %}
       - containerPort: {{ port_mapping.containerPort }}
         hostPort: {{ port_mapping.hostPort }}
 {% if port_mapping.protocol is defined %}
@@ -42,7 +42,8 @@ nodes:
 {% endif %}
 {% endif %}
 {% endfor %}
-{% elif enable_ingress_ports is defined %}
+{% endif %}
+{% if enable_ingress_ports is defined and custom_control_plane_ports is not defined %}
       - containerPort: 80
         hostPort: 80
         protocol: TCP
