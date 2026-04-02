@@ -78,6 +78,8 @@ feature_gates:
 #       protocol: TCP
 
 update_kubeconfig_ip: false
+fetch_kubeconfig: false
+fetched_kubeconfig_path: /tmp/kubeconfig
 set_inotify: true
 install_kind_bins: true
 
