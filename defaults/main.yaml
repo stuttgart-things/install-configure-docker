@@ -77,6 +77,7 @@ feature_gates:
 #       hostPort: "{{ port1 | default(range(34000, 36001) | random) }}"
 #       protocol: TCP
 
+update_kubeconfig_ip: false
 set_inotify: true
 install_kind_bins: true
 

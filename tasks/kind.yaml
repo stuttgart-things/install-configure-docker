@@ -71,6 +71,16 @@
       become_user: "{{ ansible_user }}"
       when: api_server_address is defined
 
+    - name: Update kubeconfig with host IP from facts
+      ansible.builtin.shell: |
+        echo "Updating kubeconfig with host IP {{ ansible_default_ipv4.address }}..."
+        yq -i '.clusters[0].cluster.server = "https://{{ ansible_default_ipv4.address }}:{{ api_server_port }}"' {{ kubeconfig_folder }}/{{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
+      when:
+        - update_kubeconfig_ip | bool
+        - api_server_address is not defined
+
     - name: Display cluster status
       ansible.builtin.debug:
         msg: "Cluster {{ kind_cluster_name }} {{ 'recreated' if (rebuild_kind_cluster | default(false) | bool) else 'already exists and was not modified' if (cluster_exists.rc == 0) else 'created' }}"
