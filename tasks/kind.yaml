@@ -9,6 +9,13 @@
     api_server_port: "{{ range(33000, 36001) | random }}"
   when: api_server_port is not defined and generate_api_server_port|default(true)|bool
 
+- name: Set api_server_address from host IP when update_kubeconfig_ip is enabled
+  set_fact:
+    api_server_address: "{{ ansible_default_ipv4.address }}"
+  when:
+    - update_kubeconfig_ip | default(false) | bool
+    - api_server_address is not defined
+
 - name: Generate kind config
   ansible.builtin.template:
     src: kind.yaml.j2
