@@ -23,6 +23,9 @@
   ansible.builtin.include_tasks: docker-users.yaml
   when: docker_users|length > 0
 
+- name: Reset SSH connection so docker group membership becomes effective
+  ansible.builtin.meta: reset_connection
+
 - name: Enable additional options
   ansible.builtin.include_tasks: enable-options.yaml
 
