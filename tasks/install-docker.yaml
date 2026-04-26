@@ -54,3 +54,5 @@
   ansible.builtin.copy:
     content: '{ "group": "dockerroot" }'
     dest: /etc/docker/daemon.json
+  when: ansible_os_family == "RedHat"
+  notify: Restart docker
