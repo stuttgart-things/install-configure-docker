@@ -25,7 +25,7 @@ nodes:
           kubeletExtraArgs:
             node-labels: {{ node_labels }}
 {% endif %}
-{% if api_server_port is defined or custom_control_plane_ports is defined or enable_ingress_ports is defined %}
+{% if api_server_port is defined or custom_control_plane_ports is defined or (enable_ingress_ports | default(false) | bool) %}
     extraPortMappings:
 {% if api_server_port is defined %}
       - containerPort: 6443
@@ -43,7 +43,7 @@ nodes:
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if enable_ingress_ports is defined and custom_control_plane_ports is not defined %}
+{% if (enable_ingress_ports | default(false) | bool) and custom_control_plane_ports is not defined %}
       - containerPort: 80
         hostPort: 80
         protocol: TCP
