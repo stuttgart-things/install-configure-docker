@@ -116,7 +116,7 @@ bin:
     source_url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-amd64"
     bin_to_copy: kind-linux-amd64
     to_remove: ""
-    bin_dir: "/usr/bin/kind"
+    bin_dir: "/usr/bin"
     version_cmd: "version"
     target_version: "{{ kind_version }}"
   helmfile:
@@ -126,7 +126,7 @@ bin:
     source_url: "https://github.com/helmfile/helmfile/releases/download/v{{ helmfile_version }}/helmfile_{{ helmfile_version }}_linux_amd64.tar.gz"
     bin_to_copy: helmfile
     to_remove: "helmfile"
-    bin_dir: "/usr/bin/helmfile"
+    bin_dir: "/usr/bin"
     version_cmd: "version"
     target_version: "{{ helmfile_version }}"
   helm:
@@ -136,7 +136,7 @@ bin:
     source_url: "https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz"
     bin_to_copy: "linux-amd64/helm"
     to_remove: "helm"
-    bin_dir: "/usr/bin/helm"
+    bin_dir: "/usr/bin"
     version_cmd: "version"
     target_version: "{{ helm_version }}"
   k9s:
@@ -146,7 +146,7 @@ bin:
     source_url: "https://github.com/derailed/k9s/releases/download/v{{ k9s_version }}/k9s_Linux_amd64.tar.gz"
     bin_to_copy: "k9s"
     to_remove: "k9s"
-    bin_dir: "/usr/bin/k9s"
+    bin_dir: "/usr/bin"
     version_cmd: "version"
     target_version: "{{ k9s_version }}"
   yq:
@@ -156,6 +156,6 @@ bin:
     source_url: "https://github.com/mikefarah/yq/releases/download/v{{ yq_version }}/yq_linux_amd64.tar.gz"
     bin_to_copy: yq_linux_amd64
     to_remove: ""
-    bin_dir: "/usr/bin/yq"
+    bin_dir: "/usr/bin"
     version_cmd: " version"
     target_version: "v{{ yq_version }}"
