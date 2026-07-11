@@ -92,6 +92,19 @@
       ansible.builtin.debug:
         msg: "Cluster {{ kind_cluster_name }} {{ 'recreated' if (rebuild_kind_cluster | default(false) | bool) else 'already exists and was not modified' if (cluster_exists.rc == 0) else 'created' }}"
 
+    - name: Normalize kubeconfig server 0.0.0.0 -> 127.0.0.1 for local access
+      # kind writes `server: https://0.0.0.0:<port>` into the kubeconfig when the API
+      # port is published via extraPortMappings without an explicit apiServerAddress.
+      # The apiserver cert only covers 127.0.0.1, so a local kubectl against 0.0.0.0
+      # fails TLS verification. Rewrite it to the loopback the cert actually covers.
+      # No-op when the tasks above already set a routable address (no 0.0.0.0 to match).
+      ansible.builtin.replace:
+        path: "{{ kubeconfig_folder }}/{{ kind_cluster_name }}"
+        regexp: 'https://0\.0\.0\.0:'
+        replace: 'https://127.0.0.1:'
+      become: yes
+      become_user: "{{ ansible_user }}"
+
     - name: Verify kind cluster
       ansible.builtin.shell: |
         kind get clusters
