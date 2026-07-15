@@ -162,5 +162,8 @@ bin:
     # bin_to_copy basename (yq_linux_amd64) != bin_name (yq): bin_dir must be
     # /usr/bin/yq so the copy task renames the artifact to `yq`.
     bin_dir: "/usr/bin/yq"
-    version_cmd: " version"
+    # mikefarah yq v4 needs `yq --version` — `yq version` errors (lexer: invalid
+    # input text "version"), which made the version check permanently fail and
+    # reinstalled yq every run.
+    version_cmd: " --version"
     target_version: "v{{ yq_version }}"
