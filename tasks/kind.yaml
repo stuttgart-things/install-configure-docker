@@ -69,6 +69,36 @@
         (cluster_exists.rc != 0)
       register: cluster_create
 
+    # Re-export from kind rather than trusting whatever is on disk. On a re-run
+    # that did NOT recreate the cluster (rebuild_kind_cluster: false), the file
+    # may be missing entirely, and `api_server_port` above has just been rolled
+    # to a fresh random value that the running cluster is not listening on —
+    # writing that into the kubeconfig yields `connection refused`. kind is the
+    # only authority on the port the cluster actually bound.
+    - name: Export kubeconfig from kind
+      ansible.builtin.shell: |
+        kind export kubeconfig --name {{ kind_cluster_name }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
+      become: yes
+      become_user: "{{ ansible_user }}"
+      changed_when: false
+
+    - name: Read the live API port from the exported kubeconfig
+      ansible.builtin.shell: |
+        set -o pipefail
+        yq '.clusters[0].cluster.server' {{ kubeconfig_folder }}/{{ kind_cluster_name }} \
+          | sed -E 's#.*:([0-9]+)$#\1#'
+      args:
+        executable: /bin/bash
+      become: yes
+      become_user: "{{ ansible_user }}"
+      register: live_api_server_port
+      changed_when: false
+
+    - name: Use the live API port
+      ansible.builtin.set_fact:
+        api_server_port: "{{ live_api_server_port.stdout | trim }}"
+      when: live_api_server_port.stdout | default('') | trim | length > 0
+
     - name: Update kubeconfig with real API server address
       ansible.builtin.shell: |
         echo ""
