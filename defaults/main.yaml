@@ -55,7 +55,7 @@ kind_api_port: 33643
 create_kind_cluster: true
 helmfile_version: 1.2.3
 helm_version: 4.0.4
-yq_version: 4.49.2 # datasource=github-tags depName=mikefarah/yq
+yq_version: 4.54.1 # datasource=github-tags depName=mikefarah/yq
 k9s_version: 0.50.16
 count_worker_nodes: 2
 count_controlplane_nodes: 1
