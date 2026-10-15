@@ -2,5 +2,21 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "*_version PINS IN defaults/main.yaml WITH A # datasource= COMMENT (kind, yq, docker compose). SAME MANAGER AS stuttgart-things/ansible",
+      "fileMatch": [
+        "\\.yaml$"
+      ],
+      "matchStrings": [
+        "\\s*(?<binName>.+)_version:\\s[\"']?(?<currentValue>v?\\d+\\.\\d+\\.\\d+)[\"']?\\s*#\\s*(datasource=(?<datasource>[^\\s]*))\\s*(depName=(?<depName>[^\\s]*))?\\s*"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "extractVersionTemplate": "^v?(?<version>.*)$",
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "depNameTemplate": "{{#if depName}}{{{depName}}}{{else}}{{{binName}}}{{/if}}"
+    }
   ]
 }
