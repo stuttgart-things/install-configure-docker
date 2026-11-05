@@ -30,7 +30,7 @@ jobs:
       environment-name: k8s
       continue-error: true
       ansible-image: ghcr.io/stuttgart-things/sthings-ansible:11.1.0
-      playbook: tests/test.yml
+      playbook: tests/test.yaml
     needs: yaml-lint
 
   # molecule-test:
