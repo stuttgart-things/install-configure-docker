@@ -28,9 +28,11 @@ jobs:
     with:
       runs-on: ghr-install-configure-docker-in-cluster
       environment-name: k8s
-      continue-error: true
+      continue-error: false
       ansible-image: ghcr.io/stuttgart-things/sthings-ansible:11.1.0
       playbook: tests/test.yaml
+      # Lint is clean: findings fail the job (github-workflow-templates#228).
+      fail-on-findings: true
     needs: yaml-lint
 
   # molecule-test:
