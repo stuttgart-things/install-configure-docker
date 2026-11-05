@@ -29,7 +29,7 @@
 - name: Enable additional options
   ansible.builtin.include_tasks: enable-options.yaml
 
-- name:  Increase inotify limits for Kind/Kubernetes
+- name: Increase inotify limits for Kind/Kubernetes
   ansible.builtin.include_tasks: inotify.yaml
   when: set_inotify|bool
 

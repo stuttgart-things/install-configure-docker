@@ -1,4 +1,6 @@
 ---
 # handlers file for install-configure-docker
 - name: Restart docker
-  service: "name=docker state={{ docker_restart_handler_state }}"
+  service:
+    name: docker
+    state: "{{ docker_restart_handler_state }}"
