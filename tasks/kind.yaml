@@ -38,7 +38,7 @@
         kind get clusters | grep -q '^{{ kind_cluster_name }}$'
       args:
         executable: /bin/bash
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       register: cluster_exists
       failed_when: false
@@ -48,7 +48,7 @@
       ansible.builtin.shell: |
         kind delete cluster --name {{ kind_cluster_name }}
         rm -rf {{ kubeconfig_folder }}/{{ kind_cluster_name }} || true
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       when:
         - rebuild_kind_cluster | default(false) | bool
@@ -62,7 +62,7 @@
         kind create cluster --config {{ kind_cluster_config_path }}/{{ kind_cluster_name }}.yaml --name {{ kind_cluster_name }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
       args:
         executable: /bin/bash
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       when: >
         (rebuild_kind_cluster | default(false) | bool) or
@@ -78,7 +78,7 @@
     - name: Export kubeconfig from kind
       ansible.builtin.shell: |
         kind export kubeconfig --name {{ kind_cluster_name }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       changed_when: false
 
@@ -89,7 +89,7 @@
           | sed -E 's#.*:([0-9]+)$#\1#'
       args:
         executable: /bin/bash
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       register: live_api_server_port
       changed_when: false
@@ -104,7 +104,7 @@
         echo ""
         echo "Updating kubeconfig with real IP address..."
         yq -i '.clusters[0].cluster.server = "https://{{ api_server_address }}:{{ api_server_port }}"' {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       when: api_server_address is defined
 
@@ -112,7 +112,7 @@
       ansible.builtin.shell: |
         echo "Updating kubeconfig with host IP {{ ansible_default_ipv4.address }}..."
         yq -i '.clusters[0].cluster.server = "https://{{ ansible_default_ipv4.address }}:{{ api_server_port }}"' {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       when:
         - update_kubeconfig_ip | bool
@@ -132,14 +132,14 @@
         path: "{{ kubeconfig_folder }}/{{ kind_cluster_name }}"
         regexp: 'https://0\.0\.0\.0:'
         replace: 'https://127.0.0.1:'
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
 
     - name: Verify kind cluster
       ansible.builtin.shell: |
         kind get clusters
         kubectl get nodes --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
 
     - name: Set kind name as fact
@@ -152,7 +152,7 @@
           --server-side \
           --force-conflicts \
           --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       loop: "{{ kustomize_urls }}"
       when: kustomize_urls is defined and kustomize_urls | length > 0
@@ -185,7 +185,7 @@
           {% elif item.state == 'sync' %}
           helmfile sync -f {{ item.location }} --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }} {{ state_args | join(' ') }}
           {% endif %}
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       loop: "{{ helmfile_deployments }}"
       loop_control:
@@ -196,25 +196,25 @@
       ansible.builtin.shell: |
         kubectl apply -k {{ item }} \
           --kubeconfig {{ kubeconfig_folder }}/{{ kind_cluster_name }}
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       loop: "{{ manifest_urls }}"
       when: manifest_urls is defined and manifest_urls | length > 0
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Fetch kubeconfig to ansible controller
       ansible.builtin.fetch:
         src: "{{ kubeconfig_folder }}/{{ kind_cluster_name }}"
         dest: "{{ fetched_kubeconfig_path }}"
-        flat: yes
-      become: yes
+        flat: true
+      become: true
       become_user: "{{ ansible_user }}"
       when: fetch_kubeconfig | default(false) | bool
 
     - name: Print copy-paste command to recreate kubeconfig
       ansible.builtin.shell: |
         echo "echo \"$(base64 -w0 {{ kubeconfig_folder }}/{{ kind_cluster_name }})\" | base64 -d > kubeconfig"
-      become: yes
+      become: true
       become_user: "{{ ansible_user }}"
       register: kubeconfig_copy_cmd
       changed_when: false

@@ -19,13 +19,13 @@
     name: fs.inotify.max_user_watches
     value: '524288'
     state: present
-    sysctl_set: yes
-    reload: yes
+    sysctl_set: true
+    reload: true
 
 - name: Set inotify max_user_instances
   ansible.posix.sysctl:
     name: fs.inotify.max_user_instances
     value: '512'
     state: present
-    sysctl_set: yes
-    reload: yes
+    sysctl_set: true
+    reload: true

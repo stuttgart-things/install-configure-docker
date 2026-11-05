@@ -33,7 +33,7 @@ docker_apt_repository: "deb [arch={{ docker_apt_arch }} signed-by={{ docker_apt_
 docker_apt_ignore_key_error: true
 
 # Used only for RedHat/CentOS/Fedora.
-docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo
+docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora", "centos") }}/docker-{{ docker_edition }}.repo
 docker_yum_repo_enable_edge: '0'
 docker_yum_repo_enable_test: '0'
 docker_yum_gpg_key: https://download.docker.com/linux/centos/gpg
@@ -59,8 +59,8 @@ yq_version: 4.49.2 # datasource=github-tags depName=mikefarah/yq
 k9s_version: 0.50.16
 count_worker_nodes: 2
 count_controlplane_nodes: 1
-disableDefaultCNI: true
-kubeProxyMode: "none"
+disableDefaultCNI: true # noqa var-naming[pattern] role input consumed by templates/kind.yaml.j2 and callers; renaming would break consumers
+kubeProxyMode: "none" # noqa var-naming[pattern] role input consumed by templates/kind.yaml.j2 and callers; renaming would break consumers
 #node_labels: "ingress-ready=true"
 enable_ingress_ports: true
 enable_host_paths: true

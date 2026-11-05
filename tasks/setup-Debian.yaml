@@ -31,7 +31,7 @@
   ignore_errors: "{{ docker_apt_ignore_key_error }}"
 
 - name: Add Docker apt key via curl (fallback).
-  ansible.builtin.shell: >
+  ansible.builtin.shell: > # noqa command-instead-of-module intentional curl fallback for when get_url above failed
     curl -fsSL {{ docker_apt_gpg_key }} -o {{ docker_apt_gpg_key_dest }}
   when: add_repository_key is failed
 
