@@ -13,7 +13,7 @@ on:
 jobs:
   yaml-lint:
     name: Lint yaml files
-    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-yaml-lint.yaml@main
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-yaml-lint.yaml@15bb803fd72658fda50120f8a566d5594061e6ee # v1.2.0
     with:
       runs-on: ghr-install-configure-docker-in-cluster
       environment-name: k8s
@@ -24,7 +24,7 @@ jobs:
 
   ansible-lint:
     name: Lint ansible code
-    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-ansible-lint.yaml@main # ansible-lint-24.2.1
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-ansible-lint.yaml@15bb803fd72658fda50120f8a566d5594061e6ee # v1.2.0
     with:
       runs-on: ghr-install-configure-docker-in-cluster
       environment-name: k8s
